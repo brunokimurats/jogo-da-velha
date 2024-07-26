@@ -29,6 +29,7 @@ window.resizable(False, False)
 frame = tkinter.Frame(window)
 label = tkinter.Label(frame, text='Turno de '+jog_atual, font=('Consolas', 20),
                        background = cor_3, foreground='white')
+label.pack()
 
 
 window.mainloop()
