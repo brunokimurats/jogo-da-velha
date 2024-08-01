@@ -2,13 +2,41 @@
 
 import tkinter
 
+# Funções:
 def set_tile(row, column):
-    pass
+    global jog_atual
+    
+    #Impedir a sobreposição de valor
+    if tabuleiro[row][column]['text'] != '':
+        return
+
+    tabuleiro[row][column]['text'] = jog_atual
+    if jog_atual == jog_O:
+        jog_atual = jog_X
+    else:
+        jog_atual = jog_O
+
+    label['text'] = 'Turno de '+jog_atual
 
 def new_game():
     pass
 
+def check_winner():
+    global turno, game_over
+    turno += 1
 
+    #Checar as linhas
+    for row in range(3):
+        if (tabuleiro[row][0]['text'] == tabuleiro[row][1]['text'] == tabuleiro[row][2]['text']
+            and tabuleiro[row][0]['text'] != ''):
+            label['text'] = 'Vitória de '+jog_atual
+            label.config(text=tabuleiro[row][0]['text']+'é o vencedor!', foreground=cor_2)
+            for column in range(3):
+                tabuleiro[row][column].config(foreground = cor_2, background = cor_4)
+            game_over = True
+            return
+
+# Visual
 cor_1 = 'RoyalBlue2'
 cor_2 = 'yellow2'
 cor_3 = 'PeachPuff3'
@@ -18,6 +46,7 @@ tabuleiro = [[0, 0, 0],
              [0, 0, 0],
              [0, 0, 0]]
 
+# Jogador
 jog_X = 'X'
 jog_O = 'O'
 jog_atual = jog_X
@@ -29,6 +58,9 @@ jog_atual = jog_X
 #    jog_atual = jog_X
 #    print('O')
 
+# Rodadas
+turno = 0
+game_over = False
 
 window = tkinter.Tk()
 window.title('Jogo da Velha')
@@ -57,7 +89,7 @@ frame.pack()
 window.update()
 window_width = window.winfo_width()
 window_height = window.winfo_height()
-screen_width = window.winfo_screenmmwidth()
+screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 
 window_x = int((screen_width/2) - (window_width/2))
