@@ -1,10 +1,11 @@
-# jogo da velha
-
 import tkinter
 
 # Funções:
 def set_tile(row, column):
     global jog_atual
+    
+    if (game_over):
+        return
     
     #Impedir a sobreposição de valor
     if tabuleiro[row][column]['text'] != '':
@@ -18,8 +19,19 @@ def set_tile(row, column):
 
     label['text'] = 'Turno de '+jog_atual
 
+    check_winner()
+
+
 def new_game():
-    pass
+    global turno, game_over
+
+    turno = 0
+    game_over =False
+    label.config(text='Turno de '+jog_atual, foreground='white')
+
+    for row in range(3):
+        for column in range(3):
+            tabuleiro[row][column].config(text='', foreground=cor_1, background= cor_3)
 
 def check_winner():
     global turno, game_over
@@ -29,18 +41,36 @@ def check_winner():
     for row in range(3):
         if (tabuleiro[row][0]['text'] == tabuleiro[row][1]['text'] == tabuleiro[row][2]['text']
             and tabuleiro[row][0]['text'] != ''):
-            label['text'] = 'Vitória de '+jog_atual
-            label.config(text=tabuleiro[row][0]['text']+'é o vencedor!', foreground=cor_2)
-            for column in range(3):
-                tabuleiro[row][column].config(foreground = cor_2, background = cor_4)
+            label.config(text=tabuleiro[row][0]['text']+' é o vencedor!', foreground=cor_2)
+            game_over = True
+            return
+        
+    # Checar as coluas
+    for column in range(3):
+        if (tabuleiro[0][column]['text'] == tabuleiro[1][column]['text'] == tabuleiro[2][column]['text']
+            and tabuleiro[0][column]['text'] != ''):
+            label.config(text=tabuleiro[row][0]['text']+' é o vencedor!', foreground=cor_2)
             game_over = True
             return
 
+    # Checar diagonais:
+    if (tabuleiro[0][0]['text'] == tabuleiro[1][1]['text'] == tabuleiro[2][2]['text']
+        and tabuleiro[0][0]['text']!= '')  or (tabuleiro[0][2]['text'] == tabuleiro[1][1]['text'] == tabuleiro[2][0]['text']
+        and tabuleiro[1][1]['text']!= ''):
+            label.config(text=tabuleiro[1][1]['text']+' é o vencedor!', foreground=cor_2)
+            game_over = True
+            return
+    
+    # Empate
+    if (turno == 9):
+        game_over = True
+        label.config(text='Empate!!!', foreground=cor_2)
+    
+
 # Visual
-cor_1 = 'RoyalBlue2'
-cor_2 = 'yellow2'
-cor_3 = 'PeachPuff3'
-cor_4 = 'dark slade blue'
+cor_1 = 'RoyalBlue1' # Cor das teclas
+cor_2 = 'firebrick1' # Cor do texto no resultado final
+cor_3 = 'RoyalBlue4' # Cor do fundo
 
 tabuleiro = [[0, 0, 0],
              [0, 0, 0],
